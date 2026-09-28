@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator & Booking Paket Wisuda</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #15171e;
+            --border-color: #222634;
+            --accent-color: #10b981;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --promo-badge: #eab308;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.5; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; padding-bottom: 50px; }
+        header { margin-bottom: 30px; }
+        .sub-title { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 5px; }
+        h1 { font-size: 24px; font-weight: 600; margin-bottom: 10px; }
+        p.desc { font-size: 14px; color: var(--text-muted); }
+
+        section { margin-bottom: 30px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 13px; color: var(--text-muted); }
+        .section-title { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 12px; }
+
+        .card-grid { display: flex; flex-direction: column; gap: 12px; }
+        .option-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; }
+        .option-card:hover { border-color: #4b5563; }
+        .option-card.selected { border-color: var(--accent-color); background-color: #121f1a; }
+        .option-card.promo-card { border-color: var(--promo-badge); }
+        .option-card.promo-card.selected { border-color: var(--promo-badge); background-color: #1c1a0e; }
+        
+        .badge-promo {
+            position: absolute;
+            top: -10px;
+            right: 12px;
+            background-color: var(--promo-badge);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .card-title { font-size: 16px; font-weight: 600; }
+        .card-price { font-size: 15px; font-weight: 600; color: var(--accent-color); }
+        .promo-card .card-price { color: var(--promo-badge); }
+        .card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+        
+        .features-list { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-muted); }
+        
+        .promo-terms {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 11px;
+            color: #eab308;
+            line-height: 1.4;
+        }
+
+        .checkbox-card { display: flex; align-items: center; justify-content: space-between; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 16px; cursor: pointer; }
+        .checkbox-card input { accent-color: var(--accent-color); width: 18px; height: 18px; cursor: pointer; }
+        .checkbox-info { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 6px; color: var(--text-muted); }
+        .form-group label span { color: #ef4444; }
+        .form-control { width: 100%; padding: 12px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; color: white; font-size: 14px; outline: none; }
+        .form-control:focus { border-color: var(--accent-color); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .summary-box { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; margin-top: 20px; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; color: var(--text-muted); }
+        .summary-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; color: var(--text-main); margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .summary-total span:last-child { color: var(--accent-color); }
+
+        .btn-wa { display: block; width: 100%; background-color: #10b981; color: #000; text-align: center; padding: 14px; border-radius: 10px; font-weight: 600; text-decoration: none; margin-top: 15px; border: none; cursor: pointer; font-size: 15px; transition: opacity 0.2s; }
+        .btn-wa:hover { opacity: 0.9; }
+        .wa-note { font-size: 11px; text-align: center; color: var(--text-muted); margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="sub-title">Wisuda / Booking</div>
+        <h1>Kalkulator & Booking Paket Wisuda</h1>
+        <p class="desc">Abadikan momen kelulusanmu. Durasi fleksibel, bebas foto dengan siapa saja!</p>
+    </header>
+
+    <!-- PILIH PAKET -->
+    <section>
+        <div class="section-header">
+            <span>01 / 03</span>
+            <span>Wajib dipilih</span>
+        </div>
+        <div class="section-title">Pilih paket utama</div>
+        
+        <div class="card-grid">
+            <!-- PAKET PROMO (DI ATAS BASIC) -->
+            <div class="option-card promo-card" onclick="selectPackage('Promo Wisuda (Gedung Negara)', 300000, this)">
+                <span class="badge-promo">PROMO SPECIAL</span>
+                <div class="card-top">
+                    <span class="card-title">Promo Wisuda</span>
+                    <span class="card-price">Rp 300.000</span>
+                </div>
+                <div class="card-desc">Paket hemat untuk pengerjaan cepat.</div>
+                <div class="features-list">
+                    <div>• Durasi 35 menit</div>
+                    <div>• 1 lokasi</div>
+                    <div>• Semua file mentah</div>
+                    <div>• Tanpa edit</div>
+                </div>
+                <div class="promo-terms">
+                    *Syarat & Ketentuan: Khusus pemotretan di lokasi Gedung Negara, Cirebon.
+                </div>
+            </div>
+
+            <!-- PAKET BASIC -->
+            <div class="option-card" onclick="selectPackage('Basic', 350000, this)">
+                <div class="card-top">
+                    <span class="card-title">Basic</span>
+                    <span class="card-price">Rp 350.000</span>
+                </div>
+                <div class="card-desc">Untuk momen ini yang sederhana.</div>
+                <div class="features-list">
+                    <div>• Durasi 1 jam</div>
+                    <div>• 1 lokasi</div>
+                    <div>• Semua file mentah</div>
+                    <div>• Tanpa edit</div>
+                </div>
+            </div>
+
+            <!-- PAKET GOLD -->
+            <div class="option-card" onclick="selectPackage('Gold', 400000, this)">
+                <div class="card-top">
+                    <span class="card-title">Gold</span>
+                    <span class="card-price">Rp 400.000</span>
+                </div>
+                <div class="card-desc">Pilihan seimbang untuk cerita lengkap.</div>
+                <div class="features-list">
+                    <div>• Durasi 1 jam</div>
+                    <div>• 1 lokasi</div>
+                    <div>• Semua file mentah</div>
+                    <div>• 25 foto edit pilihan</div>
+                </div>
+            </div>
+
+            <!-- PAKET PREMIUM -->
+            <div class="option-card" onclick="selectPackage('Premium', 500000, this)">
+                <div class="card-top">
+                    <span class="card-title">Premium</span>
+                    <span class="card-price">Rp 500.000</span>
+                </div>
+                <div class="card-desc">Lebih banyak frame untuk dikenang.</div>
+                <div class="features-list">
+                    <div>• Durasi 1 jam</div>
+                    <div>• 1 lokasi</div>
+                    <div>• Semua file mentah</div>
+                    <div>• 40 foto edit pilihan</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADD-ON -->
+    <section>
+        <div class="section-header">
+            <span>02 / 03</span>
+            <span>Opsional • Pilih beberapa</span>
+        </div>
+        <div class="section-title">Tambahkan yang diperlukan</div>
+        
+        <div class="card-grid">
+            <label class="checkbox-card">
+                <div class="checkbox-info">
+                    <input type="checkbox" class="addon-checkbox" value="Tambah Durasi 60 Menit" data-price="100000" onchange="calculateTotal()">
+                    <span>Tambah Durasi 60 Menit</span>
+                </div>
+                <span style="font-weight: 600; font-size: 14px;">+ Rp 100.000</span>
+            </label>
+
+            <label class="checkbox-card">
+                <div class="checkbox-info">
+                    <input type="checkbox" class="addon-checkbox" value="Cetak Foto 10R + Bingkai Eksklusif" data-price="75000" onchange="calculateTotal()">
+                    <span>Cetak Foto 10R + Bingkai Eksklusif</span>
+                </div>
+                <span style="font-weight: 600; font-size: 14px;">+ Rp 75.000</span>
+            </label>
+
+            <label class="checkbox-card">
+                <div class="checkbox-info">
+                    <input type="checkbox" class="addon-checkbox" value="Tambah Lokasi Sesi Kedua" data-price="100000" onchange="calculateTotal()">
+                    <span>Tambah Lokasi Sesi Kedua</span>
+                </div>
+                <span style="font-weight: 600; font-size: 14px;">+ Rp 100.000</span>
+            </label>
+
+            <label class="checkbox-card">
+                <div class="checkbox-info">
+                    <input type="checkbox" class="addon-checkbox" value="Extra Grading 50 Foto" data-price="100000" onchange="calculateTotal()">
+                    <span>Extra Grading 50 Foto</span>
+                </div>
+                <span style="font-weight: 600; font-size: 14px;">+ Rp 100.000</span>
+            </label>
+        </div>
+    </section>
+
+    <!-- DETAIL SESI -->
+    <section>
+        <div class="section-header">
+            <span>03 / 03</span>
+            <span>Semua wajib diisi</span>
+        </div>
+        <div class="section-title">Detail sesi</div>
+        
+        <div class="form-group">
+            <label>Nama lengkap <span>*</span></label>
+            <input type="text" id="clientName" class="form-control" placeholder="Tulis sesuai identitas" oninput="calculateTotal()">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Tanggal sesi <span>*</span></label>
+                <input type="date" id="clientDate" class="form-control" onchange="calculateTotal()">
+            </div>
+            <div class="form-group">
+                <label>Waktu sesi <span>*</span></label>
+                <input type="time" id="clientTime" class="form-control" onchange="calculateTotal()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Lokasi / kampus pemotretan <span>*</span></label>
+            <input type="text" id="clientLocation" class="form-control" placeholder="Contoh: Gedung Negara, Cirebon" oninput="calculateTotal()">
+        </div>
+    </section>
+
+    <!-- RINGKASAN & TOMBOL WA -->
+    <div class="summary-box">
+        <div class="summary-row">
+            <span>Paket utama:</span>
+            <span id="summaryPackage" style="color: white; font-weight: 500;">Belum ada paket dipilih</span>
+        </div>
+        <div class="summary-row">
+            <span>Add-on pilihan:</span>
+            <span id="summaryAddons" style="color: white; font-weight: 500;">Belum ada add-on</span>
+        </div>
+        <div class="summary-total">
+            <span>Total estimasi</span>
+            <span id="summaryTotal">Rp 0</span>
+        </div>
+
+        <button class="btn-wa" onclick="sendWhatsApp()">Booking Sesi Wisuda via WhatsApp ↗</button>
+        <div class="wa-note">Pesan akan diteruskan secara resmi untuk konfirmasi ketersediaan jadwal dan pembayaran DP di chat WhatsApp.</div>
+    </div>
+</div>
+
+<script>
+    let selectedPkgName = "";
+    let selectedPkgPrice = 0;
+
+    function selectPackage(name, price, element) {
+        document.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+        element.classList.add('selected');
+        selectedPkgName = name;
+        selectedPkgPrice = price;
+        calculateTotal();
+    }
+
+    function formatRupiah(angka) {
+        return "Rp " + angka.toLocaleString('id-ID');
+    }
+
+    function calculateTotal() {
+        let addonTotal = 0;
+        let selectedAddons = [];
+
+        document.querySelectorAll('.addon-checkbox:checked').forEach(cb => {
+            addonTotal += parseInt(cb.getAttribute('data-price'));
+            selectedAddons.push(cb.value);
+        });
+
+        let total = selectedPkgPrice + addonTotal;
+
+        document.getElementById('summaryPackage').innerText = selectedPkgName ? `${selectedPkgName} (${formatRupiah(selectedPkgPrice)})` : "Belum ada paket dipilih";
+        document.getElementById('summaryAddons').innerText = selectedAddons.length > 0 ? selectedAddons.join(', ') : "Tidak ada add-on";
+        document.getElementById('summaryTotal').innerText = formatRupiah(total);
+    }
+
+    function sendWhatsApp() {
+        let name = document.getElementById('clientName').value.trim();
+        let date = document.getElementById('clientDate').value;
+        let time = document.getElementById('clientTime').value;
+        let location = document.getElementById('clientLocation').value.trim();
+
+        if (!selectedPkgName) {
+            alert("Silakan pilih paket utama terlebih dahulu!");
+            return;
+        }
+        if (!name || !date || !time || !location) {
+            alert("Harap lengkapi semua data sesi (Nama, Tanggal, Waktu, dan Lokasi)!");
+            return;
+        }
+
+        let formattedDate = `${date} pukul ${time}`;
+
+        let selectedAddons = [];
+        let addonTotal = 0;
+        document.querySelectorAll('.addon-checkbox:checked').forEach(cb => {
+            addonTotal += parseInt(cb.getAttribute('data-price'));
+            selectedAddons.push("- " + cb.value);
+        });
+
+        let addonsText = selectedAddons.length > 0 ? selectedAddons.join('\n') : "- Tidak ada add-on";
+        let total = selectedPkgPrice + addonTotal;
+
+        let message = `Halo, saya ingin booking sesi foto wisuda.\n\n` +
+                      `DATA KLIEN\n` +
+                      `Nama: ${name}\n` +
+                      `Tanggal/Waktu: ${formattedDate}\n` +
+                      `Lokasi: ${location}\n\n` +
+                      `PAKET\n` +
+                      `${selectedPkgName} — ${formatRupiah(selectedPkgPrice)}\n\n` +
+                      `ADD-ON\n` +
+                      `${addonsText}\n\n` +
+                      `TOTAL ESTIMASI: ${formatRupiah(total)}\n\n` +
+                      `Mohon bantu cek ketersediaan jadwalnya. Terima kasih.`;
+
+        let phoneAdmin = "6285156918852";
+        let url = `https://wa.me/${phoneAdmin}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
+</script>
+
+</body>
+</html>
